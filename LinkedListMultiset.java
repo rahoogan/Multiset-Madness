@@ -102,9 +102,14 @@ public class LinkedListMultiset<T> extends Multiset<T>
 					count = currNode.getInstances();
 					// If only one element present, empty the multiset
 					if(mLength == 1) {
-						mHead = null;
-						mTail = null;
-						mLength = 0;
+						if (count ==1) {
+							mHead = null;
+							mTail = null;
+							mLength = 0;
+						}
+						else {
+							currNode.setInstances(count -1);
+						}
 					}
 					else {
 						// If only one instance present, remove element from multiset
@@ -131,6 +136,7 @@ public class LinkedListMultiset<T> extends Multiset<T>
 						}
 					}
 				}
+				currNode = currNode.getNext();
 			}
 		}
 	} // end of removeOne()
@@ -165,6 +171,7 @@ public class LinkedListMultiset<T> extends Multiset<T>
 						break;
 					}
 				}
+				currNode = currNode.getNext();
 			}
 		}
 	} // end of removeAll()
