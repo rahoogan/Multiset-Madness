@@ -3,7 +3,7 @@ import java.io.PrintStream;
 public class BstMultiset<T> extends Multiset<T> 
 {
 	protected Node root;
-	
+
 	public BstMultiset() {
 		root=new Node(null, 0);
 	} // end of BstMultiset()
@@ -11,7 +11,7 @@ public class BstMultiset<T> extends Multiset<T>
 	public void add(T item) {
 		insert(root,item);
 	} // end of add()
-	
+
 	private void insert(Node currNode, T item){
 		if(currNode.getValue()==null){
 			currNode.setValue(item);
@@ -31,13 +31,13 @@ public class BstMultiset<T> extends Multiset<T>
 			insert(currNode.getleft(),item);
 	}
 
-/** Search value in the tree.
- * If value is found return node depth*/
+	/** Search value in the tree.
+	 * If value is found return node depth*/
 	public int search(T item) {
 		return bstSearch(root,item);
 
 	} // end of search()
-	
+
 	private int bstSearch(Node currNode, T item){
 		int compare = currNode.compareTo(item);
 		if(compare==0)
@@ -51,28 +51,28 @@ public class BstMultiset<T> extends Multiset<T>
 
 
 	public void removeOne(T item) {
-		
+		del(root,item, false);
 	} // end of removeOne()
-	
-	
+
+
 	public void removeAll(T item) {
-		del(root,item);
+		del(root,item, true);
 	} // end of removeAll()
 
 
 	public void print(PrintStream out) {
 		printNode(out , root);
-		} // end of print()
+	} // end of print()
 	private void printNode(PrintStream out , Node currNode){
 		if(currNode.getValue() != null) {
 			out.println(currNode.getValue() + printDelim + currNode.getInstances());
 			printNode(out , currNode.getleft());
 			printNode(out , currNode.getRight());
 
-			}
+		}
 	}
-	
-	private void del(Node currNode, T item){
+
+	private void del(Node currNode, T item, Boolean ra){
 		int compare = currNode.compareTo(item);
 		Node rightNode = currNode.getRight();
 		T right = rightNode.getValue();
@@ -80,60 +80,72 @@ public class BstMultiset<T> extends Multiset<T>
 		T left = leftNode.getValue();
 		if(compare==0){
 			if(right==null && left==null) {
-				delNoChild(currNode);
+				delNoChild(currNode, ra);
 				return;
 			}
 			if((right==null || left==null)){
-				delOneChild(currNode);
+				delOneChild(currNode, ra);
 				return;
 			}
 			if(left!=null && right!=null){
-				delTwoChild(currNode);
+				delTwoChild(currNode, ra);
 				return;
 			}
 			return;
 		}
 
 		if(compare>0){
-			del(rightNode,item);
+			del(rightNode,item, ra);
 			return;
 		}
 		if(compare<0){
-			del(leftNode,item);
+			del(leftNode,item, ra);
 			return;
 		}
 	}
-	
-	private void delNoChild(Node currNode){
-		currNode.setValue(null);		
-	}
-	
-	private void delOneChild(Node currNode){
-		Node tempNode;
-		if(currNode.getRight().getValue()!=null){
-			tempNode = currNode.getRight();
-			currNode.setValue(tempNode.getValue());
-			currNode.setRight(tempNode.getRight());	
-			currNode.setLeft(tempNode.getleft());	
 
-		}
-		else{
-			tempNode = currNode.getleft();
-			currNode.setValue(tempNode.getValue());
-			currNode.setRight(tempNode.getRight());	
-			currNode.setLeft(tempNode.getleft());	
-		}
+	private void delNoChild(Node currNode, Boolean ra){
+		if(ra || currNode.getInstances()==1)
+			currNode.setValue(null);	
+		else
+			currNode.setInstances(currNode.getInstances()-1);
 	}
-	
-	private void delTwoChild(Node currNode){
-		//currNode = searchSmallest(currNode.getRight());
+
+	private void delOneChild(Node currNode, Boolean ra){
+		Node tempNode;
+
+		if(ra || currNode.getInstances()==1){
+			if(currNode.getRight().getValue()!=null){
+				tempNode = currNode.getRight();
+				currNode.setValue(tempNode.getValue());
+				currNode.setInstances(tempNode.getInstances());
+				currNode.setRight(tempNode.getRight());	
+				currNode.setLeft(tempNode.getleft());
+			} else{
+				tempNode = currNode.getleft();
+				currNode.setValue(tempNode.getValue());
+				currNode.setInstances(tempNode.getInstances());
+				currNode.setRight(tempNode.getRight());	
+				currNode.setLeft(tempNode.getleft());	
+			}
+		}
+		else
+			currNode.setInstances(currNode.getInstances()-1);
+	}
+
+
+	private void delTwoChild(Node currNode, Boolean ra){
+		if(ra || currNode.getInstances()==1){
 			Node smallest = searchSmallest(currNode.getRight());
 			currNode.setValue(smallest.getValue());	
 			currNode.setInstances(smallest.getInstances());
 			smallest.setValue(null);
 			smallest.setInstances(0);
+		}
+		else
+			currNode.setInstances(currNode.getInstances()-1);
 	}
-	
+
 	private Node searchSmallest(Node currNode){
 		if(currNode.getleft().getValue()!=null){
 			currNode = currNode.getleft();
@@ -141,17 +153,17 @@ public class BstMultiset<T> extends Multiset<T>
 		}
 		return currNode;
 	}
-	
-	
-	
+
+
+
 	/**
- 	* @name Node
- 	* @type Class
- 	* @descr Class which represents the individual elements which constitute a multiset
- 	* @author s3586372 Rahul Raghavan, s3572164 Farid Farzin
-	* @created 10-08-2017
- 	*
- 	*/ 
+	 * @name Node
+	 * @type Class
+	 * @descr Class which represents the individual elements which constitute a multiset
+	 * @author s3586372 Rahul Raghavan, s3572164 Farid Farzin
+	 * @created 10-08-2017
+	 *
+	 */ 
 	private class Node 
 	{
 		/** The value of the Node */
