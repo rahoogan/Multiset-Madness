@@ -73,35 +73,45 @@ public class BstMultiset<T> extends Multiset<T>
 	}
 
 	private void del(Node currNode, T item, Boolean ra){
-		int compare = currNode.compareTo(item);
-		Node rightNode = currNode.getRight();
-		T right = rightNode.getValue();
-		Node leftNode = currNode.getleft();
-		T left = leftNode.getValue();
-		if(compare==0){
-			if(right==null && left==null) {
-				delNoChild(currNode, ra);
-				return;
-			}
-			if((right==null || left==null)){
-				delOneChild(currNode, ra);
-				return;
-			}
-			if(left!=null && right!=null){
-				delTwoChild(currNode, ra);
-				return;
-			}
-			return;
-		}
+		
+			if(currNode!=null){	
+				T right=null;
+				T left=null;
 
-		if(compare>0){
-			del(rightNode,item, ra);
-			return;
-		}
-		if(compare<0){
-			del(leftNode,item, ra);
-			return;
-		}
+			int compare = currNode.compareTo(item);
+			Node rightNode = currNode.getRight();
+			if(rightNode!=null)
+			right = rightNode.getValue();
+			Node leftNode = currNode.getleft();
+			if(leftNode!=null)
+			left = leftNode.getValue();
+			if(compare==0){
+				if(right==null && left==null) {
+					delNoChild(currNode, ra);
+					return;
+				}
+				if((right==null || left==null)){
+					delOneChild(currNode, ra);
+					return;
+				}
+				if(left!=null && right!=null){
+					delTwoChild(currNode, ra);
+					return;
+				}
+				return;
+			}
+
+			if(compare>0){
+				del(rightNode,item, ra);
+				return;
+			}
+			if(compare<0){
+				del(leftNode,item, ra);
+				return;
+			}
+			} else 
+				return;
+
 	}
 
 	private void delNoChild(Node currNode, Boolean ra){
@@ -216,12 +226,12 @@ public class BstMultiset<T> extends Multiset<T>
 				return 0;
 			int input = ((Comparable)nValue).compareTo(o);
 			if(input==0)
-				output = 0;
+				return 0;
 			if(input>0)
-				output = -1;
+				return -1;
 			if(input<0)
-				output = 1;
-			return output;
+				return 1;
+			return 0;
 		}
 	}
 
