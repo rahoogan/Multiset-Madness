@@ -94,14 +94,15 @@ public class BstMultiset<T> extends Multiset<T>
 			return;
 		}
 
-		if(compare>0){
+		if(compare>0 && right != null){
 			del(rightNode,item, ra);
 			return;
 		}
-		if(compare<0){
+		if(compare<0 && left != null){
 			del(leftNode,item, ra);
 			return;
 		}
+		return;
 	}
 
 	private void delNoChild(Node currNode, Boolean ra){
