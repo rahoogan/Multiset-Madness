@@ -78,36 +78,65 @@ public class MultisetAnalyser
 			}
 			// Perform Testing
 			double addTime = 0;
+			int complete =0;
+			int oldComplete = 0;
+			long addStartTime = 0;
+			long addEndTime = 0;
+			int nextInt = 0;
 			for (int i =0; i< add; ++i) {
-				int nextInt = multiRandom.nextInt(size);
-				long addStartTime = System.nanoTime();
+				nextInt = multiRandom.nextInt(size);
+				addStartTime = System.nanoTime();
 				multiset.add(nextInt);
-				long addEndTime = System.nanoTime();
+				addEndTime = System.nanoTime();
 				addTime += (double)(addEndTime - addStartTime);
-				//System.out.println(nextInt);
+				complete = ((int)(((double)i/(double)add)*100));
+				if(complete > 0 && complete%10 == 0 && complete != oldComplete) {
+					System.out.println(complete +"% Complete");
+				}
+				oldComplete = complete;
 			}
+			System.out.println("Add Time: " + ((double)(addTime)) / Math.pow(10, 9) + " sec");
 
 			double searchTime = 0;
+			complete = 0;
+			oldComplete =0;
+			long searchStartTime = 0;
+			long searchEndTime = 0;
+			nextInt = 0;
 			for (int i =0; i< search; ++i) {
-				int nextInt = multiRandom.nextInt(size);
-				long searchStartTime = System.nanoTime();
-				multiset.search(multiRandom.nextInt(size));
-				long searchEndTime = System.nanoTime();
+				nextInt = multiRandom.nextInt(size);
+				searchStartTime = System.nanoTime();
+				multiset.search(nextInt);
+				searchEndTime = System.nanoTime();
 				searchTime += (double)(searchEndTime - searchStartTime);
+				complete = ((int)(((double)i/(double)search)*100));
+                                if(complete > 0 && complete%10 == 0 && complete != oldComplete) {
+                                        System.out.println(complete +"% Complete");
+                                }
+				oldComplete = complete;
 			}
+			System.out.println("Search Time: " + ((double)(searchTime)) / Math.pow(10, 9) + " sec");
 
 			double removeTime = 0;
+			complete = 0;
+			oldComplete =0;
+			long removeStartTime = 0;
+			long removeEndTime = 0;
+			nextInt = 0;
 			for (int i =0; i< remove; ++i) {
-				int nextInt = multiRandom.nextInt(size);
-				long removeStartTime = System.nanoTime();
-				multiset.removeOne(multiRandom.nextInt(size));
-				long removeEndTime = System.nanoTime();
-				removeTime = (double)(removeEndTime - removeStartTime);
+				nextInt = multiRandom.nextInt(size);
+				removeStartTime = System.nanoTime();
+				multiset.removeOne(nextInt);
+				removeEndTime = System.nanoTime();
+				removeTime += (double)(removeEndTime - removeStartTime);
+				complete = ((int)(((double)i/(double)remove)*100));
+                                if(complete >0 && complete%10 == 0 && oldComplete != complete) {
+                                        System.out.println(complete +"% Complete");
+                                }
+				oldComplete = complete;
 			}
-
-			System.out.println("Add Time: " + ((double)(addTime)) / Math.pow(10, 9) + " sec");
-			System.out.println("Search Time: " + ((double)(searchTime)) / Math.pow(10, 9) + " sec");
 			System.out.println("Remove Time: " + ((double)(removeTime)) / Math.pow(10, 9) + " sec");
+
 			}
 	}
 
