@@ -75,27 +75,72 @@ public class SortedLinkedListMultiset<T extends Comparable<T>> extends Multiset<
 		}
 	} // end of add()
 
+	private Node searchNode(T item) {
+
+		Node currNode = mHead;
+		int middle = (int)((double)mLength/2.0);
+		if (item instanceof Number) {
+			double avg = (((Number)mTail.getValue()).doubleValue() + ((Number)mHead.getValue()).doubleValue())/2;
+			if (((Number)item).doubleValue() > avg) {
+				// Search to the middle from the head
+				for (int i =0; i < middle; ++i) {
+					if(currNode.getValue().equals(item)) {
+						return currNode;	
+					}
+					else if (currNode.getValue().compareTo(item) < 0) {
+						// Item does not exist in multiset
+						return null;
+					}
+					currNode = currNode.getNext();
+				}
+			}
+			else {
+				// Search to the middle from the tail
+				currNode = mTail;
+				for (int i = mLength-1; i >= middle; --i) {
+					if(currNode.getValue().equals(item)) {
+						return currNode;
+					}
+					else if (currNode.getValue().compareTo(item) > 0) {
+						// Item does not exist in multiset
+						return null;
+					}
+					currNode = currNode.getPrev();
+				}
+			}		
+		}
+		else {
+			// Regular Search	
+			currNode = mHead;
+			while(!(currNode.getValue().compareTo(item)==0) && currNode.getNext()!=null){
+				if (currNode.getValue().compareTo(item) < 0) {
+					break;
+				}
+				currNode=currNode.getNext();
+			}
+			if(currNode.getValue().compareTo(item)==0)
+				return currNode;
+		}
+		return null;
+	}
+
 
 	public int search(T item) {
-		Node currNode = mHead;
-		while(!(currNode.getValue().compareTo(item)==0) && 
-				currNode.getNext()!=null){
-			currNode=currNode.getNext();
+		Node result = searchNode(item);
+		if (result == null) {
+			return 0;
 		}
-		if(currNode.getValue().compareTo(item)==0)
-			return currNode.getInstances();		
-		return 0;
+		else {
+			return result.getInstances();
+		}
 	} // end of add()
 
 
 	public void removeOne(T item) {
-		Node currNode = mHead;
-		Node next=null;
-		while(!(currNode.getValue().compareTo(item)==0) && 
-				currNode.getNext()!=null){
-			currNode=currNode.getNext();
-		}
-		if(currNode.getValue().compareTo(item)==0){
+		Node currNode = searchNode(item);
+		Node next = null;
+
+		if(currNode != null && currNode.getValue().compareTo(item)==0){
 			if(currNode.getInstances()!=1)
 				currNode.setInstances(currNode.getInstances()-1); 
 			else{
