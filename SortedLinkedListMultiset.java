@@ -113,8 +113,8 @@ public class SortedLinkedListMultiset<T extends Comparable<T>> extends Multiset<
 			// Regular Search	
 			currNode = mHead;
 			while(!(currNode.getValue().compareTo(item)==0) && currNode.getNext()!=null){
-				if (currNode.getValue().compareTo(item) < 0) {
-					break;
+				if (currNode.getValue().compareTo(item) > 0) {
+					return null;
 				}
 				currNode=currNode.getNext();
 			}
@@ -167,25 +167,26 @@ public class SortedLinkedListMultiset<T extends Comparable<T>> extends Multiset<
 	public void removeAll(T item) {
 		Node currNode = mHead;
 		Node next=null;
-		if(mHead.getValue().compareTo(item)==0){
-			if(mHead.getNext()!=null){
-				mHead=mHead.getNext();
-				if(mHead.getPrev()!=null)
-					mHead.setPrev(null);
-			} else 
-				mHead = null;
-		}
-		else{
-			while(!(currNode.getValue().compareTo(item)==0) && 
-					currNode!=null){
-				currNode=currNode.getNext();
+		if (mHead != null) {
+			if(mHead.getValue().compareTo(item)==0){
+				if(mHead.getNext()!=null){
+					mHead=mHead.getNext();
+					if(mHead.getPrev()!=null)
+						mHead.setPrev(null);
+				} else 
+					mHead = null;
 			}
-			if(currNode.getValue().compareTo(item)==0){
-				next = currNode.getNext();
-				currNode = currNode.getPrev();
-				currNode.setNext(next);
-				if(next!=null && currNode.getPrev()!=null)
-					currNode.getNext().setPrev(currNode);
+			else{
+				while(currNode != null && !(currNode.getValue().compareTo(item)==0)){
+					currNode=currNode.getNext();
+				}
+				if(currNode != null && currNode.getValue().compareTo(item)==0){
+					next = currNode.getNext();
+					currNode = currNode.getPrev();
+					currNode.setNext(next);
+					if(next!=null && currNode.getPrev()!=null)
+						currNode.getNext().setPrev(currNode);
+				}
 			}
 		}
 
