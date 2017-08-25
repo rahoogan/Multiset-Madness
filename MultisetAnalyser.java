@@ -27,6 +27,7 @@ public class MultisetAnalyser
 	private static void analyser(String[] args){
 		Random multiRandom = new Random(System.currentTimeMillis());
 		String implementation = args[0];
+		int fixedsetSize = 0;
 		int size = 0;
 		int add = 0;
 		int remove = 0;
@@ -81,20 +82,23 @@ public class MultisetAnalyser
 			} catch(NumberFormatException ex) {
 				throw new IllegalArgumentException("Invalid number of removals specified. Please specify a positive integer.");
 			}
+
+			// Set ratio of size of fixed set to size of multiset
+			fixedsetSize = size;
+
 			// Perform Testing
 			double addTime = 0;
 			for (int i =0; i< add; ++i) {
-				int nextInt = multiRandom.nextInt(size);
+				int nextInt = multiRandom.nextInt(fixedsetSize);
 				long addStartTime = System.nanoTime();
 				multiset.add(nextInt);
 				long addEndTime = System.nanoTime();
 				addTime += (double)(addEndTime - addStartTime);
-				//System.out.println(nextInt);
 			}
 
 			double searchTime = 0;
 			for (int i =0; i< search; ++i) {
-				int nextInt = multiRandom.nextInt(size);
+				int nextInt = multiRandom.nextInt(fixedsetSize);
 				long searchStartTime = System.nanoTime();
 				multiset.search(multiRandom.nextInt(size));
 				long searchEndTime = System.nanoTime();
@@ -103,11 +107,11 @@ public class MultisetAnalyser
 
 			double removeTime = 0;
 			for (int i =0; i< remove; ++i) {
-				int nextInt = multiRandom.nextInt(size);
+				int nextInt = multiRandom.nextInt(fixedsetSize);
 				long removeStartTime = System.nanoTime();
-				multiset.removeOne(multiRandom.nextInt(size));
+				multiset.removeOne(nextInt);
 				long removeEndTime = System.nanoTime();
-				removeTime = (double)(removeEndTime - removeStartTime);
+				removeTime += (double)(removeEndTime - removeStartTime);
 			}
 
 			System.out.println("Add Time: " + ((double)(addTime)) / Math.pow(10, 9) + " sec");
@@ -145,11 +149,17 @@ public class MultisetAnalyser
 				System.out.println("**************************************************************************");
 			        System.out.println("multiset name: "+msName[i]);
 				System.out.println("size length: " + msSize[j]);
-				System.out.println("Scenario 4: (Search > addition + deletion) ");
+				System.out.println("Scenario 4: (Search > addition + deletion) 2N");
 				analyser(scen4(msName[i],msSize[j], "2"));
 				System.out.println("**************************************************************************");
+			        System.out.println("multiset name: "+msName[i]);
+				System.out.println("size length: " + msSize[j]);
+				System.out.println("Scenario 4: (Search > addition + deletion) 3N");
 				analyser(scen4(msName[i],msSize[j],"3"));
 				System.out.println("**************************************************************************");
+			        System.out.println("multiset name: "+msName[i]);
+				System.out.println("size length: " + msSize[j]);
+				System.out.println("Scenario 4: (Search > addition + deletion) 4N");
 				analyser(scen4(msName[i],msSize[j],"4"));
 				System.out.println("**************************************************************************");
 			}
