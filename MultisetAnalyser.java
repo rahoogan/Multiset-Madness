@@ -23,6 +23,7 @@ public class MultisetAnalyser
 		Random multiRandom = new Random(System.currentTimeMillis());
 		String implementation = args[0];
 		int size = 0;
+		int fixedsetSize = 0;
 		int add = 0;
 		int remove = 0;
 		int search = 0;
@@ -40,6 +41,12 @@ public class MultisetAnalyser
 					break;
 				case "bst":
 					multiset = new BstMultiset<Integer>();
+					break;
+                                case "baltree":
+					multiset = new BalTreeMultiset();
+                                        break;
+				case "hash":
+					multiset = new HashMultiset();
 					break;
 				default:
 					throw new IllegalArgumentException("Invalid implementation type specified. Valid types are: linkedlist, sortedlinkedlist, bst");
@@ -76,15 +83,31 @@ public class MultisetAnalyser
 			} catch(NumberFormatException ex) {
 				throw new IllegalArgumentException("Invalid number of removals specified. Please specify a positive integer.");
 			}
+
+			// Select Fixed Set Size to Multiset Size Ration
+			fixedsetSize = size;
+
+			int complete = 0;
+			int oldComplete =0;
+			for (int i =0; i< add; ++i) {
+				nextInt = multiRandom.nextInt(fixedsetSize);
+				multiset.add(nextInt);
+				complete = ((int)(((double)i/(double)add)*100));
+				if(complete > 0 && complete%10 == 0 && complete != oldComplete) {
+					System.out.println(complete +"% Complete");
+				}
+				oldComplete = complete;
+			}
+
 			// Perform Testing
 			double addTime = 0;
-			int complete =0;
-			int oldComplete = 0;
+			complete =0;
+			oldComplete = 0;
 			long addStartTime = 0;
 			long addEndTime = 0;
 			int nextInt = 0;
 			for (int i =0; i< add; ++i) {
-				nextInt = multiRandom.nextInt(size);
+				nextInt = multiRandom.nextInt(fixedsetSize);
 				addStartTime = System.nanoTime();
 				multiset.add(nextInt);
 				addEndTime = System.nanoTime();
@@ -104,7 +127,7 @@ public class MultisetAnalyser
 			long searchEndTime = 0;
 			nextInt = 0;
 			for (int i =0; i< search; ++i) {
-				nextInt = multiRandom.nextInt(size);
+				nextInt = multiRandom.nextInt(fixedsetSize);
 				searchStartTime = System.nanoTime();
 				multiset.search(nextInt);
 				searchEndTime = System.nanoTime();
@@ -124,7 +147,7 @@ public class MultisetAnalyser
 			long removeEndTime = 0;
 			nextInt = 0;
 			for (int i =0; i< remove; ++i) {
-				nextInt = multiRandom.nextInt(size);
+				nextInt = multiRandom.nextInt(fixedsetSize);
 				removeStartTime = System.nanoTime();
 				multiset.removeOne(nextInt);
 				removeEndTime = System.nanoTime();
