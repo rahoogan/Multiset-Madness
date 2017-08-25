@@ -77,8 +77,8 @@ public class MultisetAnalyser
 			}
 			try {
 				remove = Integer.parseInt(args[4]);
-				if(remove > add || remove < 0) {
-					throw new IllegalArgumentException("Number of removals must be lower than number of additions, and not less than 0");
+				if(remove > size) {
+					throw new IllegalArgumentException("Number of removals must be lower than the size of the fixed set");
 				}
 			} catch(NumberFormatException ex) {
 				throw new IllegalArgumentException("Invalid number of removals specified. Please specify a positive integer.");
