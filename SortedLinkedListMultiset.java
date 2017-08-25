@@ -78,6 +78,8 @@ public class SortedLinkedListMultiset<T extends Comparable<T>> extends Multiset<
 	private Node searchNode(T item) {
 
 		Node currNode = mHead;
+		if (mHead == null)
+			return null;
 		int middle = (int)((double)mLength/2.0);
 		if (item instanceof Number) {
 			double avg = (((Number)mTail.getValue()).doubleValue() + ((Number)mHead.getValue()).doubleValue())/2;
@@ -112,7 +114,7 @@ public class SortedLinkedListMultiset<T extends Comparable<T>> extends Multiset<
 		else {
 			// Regular Search	
 			currNode = mHead;
-			while(!(currNode.getValue().compareTo(item)==0) && currNode.getNext()!=null){
+			while(currNode.getNext()!=null && !(currNode.getValue().compareTo(item)==0)){
 				if (currNode.getValue().compareTo(item) > 0) {
 					return null;
 				}
