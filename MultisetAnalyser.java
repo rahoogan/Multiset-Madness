@@ -89,6 +89,7 @@ public class MultisetAnalyser
 
 			int complete = 0;
 			int oldComplete =0;
+			int nextInt = 0;
 			for (int i =0; i< add; ++i) {
 				nextInt = multiRandom.nextInt(fixedsetSize);
 				multiset.add(nextInt);
@@ -105,7 +106,7 @@ public class MultisetAnalyser
 			oldComplete = 0;
 			long addStartTime = 0;
 			long addEndTime = 0;
-			int nextInt = 0;
+			nextInt = 0;
 			for (int i =0; i< add; ++i) {
 				nextInt = multiRandom.nextInt(fixedsetSize);
 				addStartTime = System.nanoTime();
