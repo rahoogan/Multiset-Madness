@@ -126,25 +126,31 @@ public class MultisetAnalyser
 		String[] args;
 
 		for(int i=0; i<msName.length;i++){	
-			System.out.println("multiset name: "+msName);
 			for(int j=0;j<msSize.length;j++){
-				System.out.println("size lenght: " + msSize);
 				//only addition
+			        System.out.println("multiset name: "+msName[i]);
+				System.out.println("size length: " + msSize[j]);
 				System.out.println("Scenario 1: (only addition) ");
 				analyser(scen1(msName[i],msSize[j]));
 				System.out.println("**************************************************************************");
+			        System.out.println("multiset name: "+msName[i]);
+				System.out.println("size length: " + msSize[j]);
 				System.out.println("Scenario 2: (addition equals deletion) ");
 				analyser(scen2(msName[i],msSize[j]));
 				System.out.println("**************************************************************************");
+			        System.out.println("multiset name: "+msName[i]);
+				System.out.println("size length: " + msSize[j]);
 				System.out.println("Scenario 3: (only deletion) ");
 				analyser(scen3(msName[i],msSize[j]));
 				System.out.println("**************************************************************************");
+			        System.out.println("multiset name: "+msName[i]);
+				System.out.println("size length: " + msSize[j]);
 				System.out.println("Scenario 4: (Search > addition + deletion) ");
-				analyser(scen4(msName[i],msSize[j]));
+				analyser(scen4(msName[i],msSize[j], "2"));
 				System.out.println("**************************************************************************");
-				analyser(scen4(msName[i],msSize[j]));
+				analyser(scen4(msName[i],msSize[j],"3"));
 				System.out.println("**************************************************************************");
-				analyser(scen4(msName[i],msSize[j]));
+				analyser(scen4(msName[i],msSize[j],"4"));
 				System.out.println("**************************************************************************");
 			}
 		}
@@ -183,14 +189,13 @@ public class MultisetAnalyser
 		return args;
 	}
 	//search greater than addd+removal
-	private String[] scen4(String name, String size){
+	private String[] scen4(String name, String size, String searchNo){
 		String[] args=new String[5];
 		int s = (Integer.parseInt(size));
 		
 		args[0]=name; //name
 		args[1]=size;//size
 		args[2]=Integer.toString(s/2);//add
-		String searchNo = Integer.toString((s*(int)(Math.random() * s)));//search
 		System.out.println("Number of searches: "+ searchNo);
 		args[3]= searchNo;
 		args[4]=Integer.toString(s/2);//remove
