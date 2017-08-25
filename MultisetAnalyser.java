@@ -20,10 +20,14 @@ public class MultisetAnalyser
  	* @args Number of Searches
  	*/ 
 	public static void main(String[] args) throws IllegalArgumentException {
+		MultisetAnalyser ma = new MultisetAnalyser();
+		ma.multisetAnalysis();
+	}
+	
+	private static void analyser(String[] args){
 		Random multiRandom = new Random(System.currentTimeMillis());
 		String implementation = args[0];
 		int size = 0;
-		int fixedsetSize = 0;
 		int add = 0;
 		int remove = 0;
 		int search = 0;
@@ -41,12 +45,6 @@ public class MultisetAnalyser
 					break;
 				case "bst":
 					multiset = new BstMultiset<Integer>();
-					break;
-                                case "baltree":
-					multiset = new BalTreeMultiset();
-                                        break;
-				case "hash":
-					multiset = new HashMultiset();
 					break;
 				default:
 					throw new IllegalArgumentException("Invalid implementation type specified. Valid types are: linkedlist, sortedlinkedlist, bst");
@@ -83,88 +81,119 @@ public class MultisetAnalyser
 			} catch(NumberFormatException ex) {
 				throw new IllegalArgumentException("Invalid number of removals specified. Please specify a positive integer.");
 			}
-
-			// Select Fixed Set Size to Multiset Size Ration
-			fixedsetSize = size;
-
-			int complete = 0;
-			int oldComplete =0;
-			int nextInt = 0;
-			for (int i =0; i< add; ++i) {
-				nextInt = multiRandom.nextInt(fixedsetSize);
-				multiset.add(nextInt);
-				complete = ((int)(((double)i/(double)add)*100));
-				if(complete > 0 && complete%10 == 0 && complete != oldComplete) {
-					System.out.println(complete +"% Complete");
-				}
-				oldComplete = complete;
-			}
-
 			// Perform Testing
 			double addTime = 0;
-			complete =0;
-			oldComplete = 0;
-			long addStartTime = 0;
-			long addEndTime = 0;
-			nextInt = 0;
 			for (int i =0; i< add; ++i) {
-				nextInt = multiRandom.nextInt(fixedsetSize);
-				addStartTime = System.nanoTime();
+				int nextInt = multiRandom.nextInt(size);
+				long addStartTime = System.nanoTime();
 				multiset.add(nextInt);
-				addEndTime = System.nanoTime();
+				long addEndTime = System.nanoTime();
 				addTime += (double)(addEndTime - addStartTime);
-				complete = ((int)(((double)i/(double)add)*100));
-				if(complete > 0 && complete%10 == 0 && complete != oldComplete) {
-					System.out.println(complete +"% Complete");
-				}
-				oldComplete = complete;
+				//System.out.println(nextInt);
 			}
-			System.out.println("Add Time: " + ((double)(addTime)) / Math.pow(10, 9) + " sec");
 
 			double searchTime = 0;
-			complete = 0;
-			oldComplete =0;
-			long searchStartTime = 0;
-			long searchEndTime = 0;
-			nextInt = 0;
 			for (int i =0; i< search; ++i) {
-				nextInt = multiRandom.nextInt(fixedsetSize);
-				searchStartTime = System.nanoTime();
-				multiset.search(nextInt);
-				searchEndTime = System.nanoTime();
+				int nextInt = multiRandom.nextInt(size);
+				long searchStartTime = System.nanoTime();
+				multiset.search(multiRandom.nextInt(size));
+				long searchEndTime = System.nanoTime();
 				searchTime += (double)(searchEndTime - searchStartTime);
-				complete = ((int)(((double)i/(double)search)*100));
-                                if(complete > 0 && complete%10 == 0 && complete != oldComplete) {
-                                        System.out.println(complete +"% Complete");
-                                }
-				oldComplete = complete;
 			}
-			System.out.println("Search Time: " + ((double)(searchTime)) / Math.pow(10, 9) + " sec");
 
 			double removeTime = 0;
-			complete = 0;
-			oldComplete =0;
-			long removeStartTime = 0;
-			long removeEndTime = 0;
-			nextInt = 0;
 			for (int i =0; i< remove; ++i) {
-				nextInt = multiRandom.nextInt(fixedsetSize);
-				removeStartTime = System.nanoTime();
-				multiset.removeOne(nextInt);
-				removeEndTime = System.nanoTime();
-				removeTime += (double)(removeEndTime - removeStartTime);
-				complete = ((int)(((double)i/(double)remove)*100));
-                                if(complete >0 && complete%10 == 0 && oldComplete != complete) {
-                                        System.out.println(complete +"% Complete");
-                                }
-				oldComplete = complete;
+				int nextInt = multiRandom.nextInt(size);
+				long removeStartTime = System.nanoTime();
+				multiset.removeOne(multiRandom.nextInt(size));
+				long removeEndTime = System.nanoTime();
+				removeTime = (double)(removeEndTime - removeStartTime);
 			}
-			System.out.println("Remove Time: " + ((double)(removeTime)) / Math.pow(10, 9) + " sec");
 
+			System.out.println("Add Time: " + ((double)(addTime)) / Math.pow(10, 9) + " sec");
+			System.out.println("Search Time: " + ((double)(searchTime)) / Math.pow(10, 9) + " sec");
+			System.out.println("Remove Time: " + ((double)(removeTime)) / Math.pow(10, 9) + " sec");
 			}
 	}
 
 	public static void usage() {
 		System.out.println("Usage: java MultisetAnalyser <multiset type: bst, linkedlist or sortedlinkedlist> <size of random set> <number of additions> <number of searches> <number of removals>\nFor example: java MultisetAnalyser linkedlist 100000 1000 400000 30");
+	}
+	
+	public void multisetAnalysis(){
+		String[] msName={"linkedlist", "sortedlinkedlist", "bst", "hash", "baltree"};
+		String[] msSize={"10000","100000","1000000"};
+		String[] args;
+
+		for(int i=0; i<msName.length;i++){	
+			System.out.println("multiset name: "+msName);
+			for(int j=0;j<msSize.length;j++){
+				System.out.println("size lenght: " + msSize);
+				//only addition
+				System.out.println("Scenario 1: (only addition) ");
+				analyser(scen1(msName[i],msSize[j]));
+				System.out.println("**************************************************************************");
+				System.out.println("Scenario 2: (addition equals deletion) ");
+				analyser(scen2(msName[i],msSize[j]));
+				System.out.println("**************************************************************************");
+				System.out.println("Scenario 3: (only deletion) ");
+				analyser(scen3(msName[i],msSize[j]));
+				System.out.println("**************************************************************************");
+				System.out.println("Scenario 4: (Search > addition + deletion) ");
+				analyser(scen4(msName[i],msSize[j]));
+				System.out.println("**************************************************************************");
+				analyser(scen4(msName[i],msSize[j]));
+				System.out.println("**************************************************************************");
+				analyser(scen4(msName[i],msSize[j]));
+				System.out.println("**************************************************************************");
+			}
+		}
+	}
+	//only addition
+	private String[] scen1(String name, String size){
+		String[] args=new String[5];
+
+		args[0]=name; //name
+		args[1]=size;//size
+		args[2]=size;//add
+		args[3]="0";//search
+		args[4]="0";//remove
+		return args;
+	}
+	//addition equals removal
+	private String[] scen2(String name, String size){
+		String[] args=new String[5];
+
+		args[0]=name; //name
+		args[1]=size;//size
+		args[2]=size;//add
+		args[3]="0";//search
+		args[4]=size;//remove
+		return args;
+	}
+	//only removal
+	private String[] scen3(String name, String size){
+		String[] args=new String[5];
+
+		args[0]=name; //name
+		args[1]=size;//size
+		args[2]="0";//add
+		args[3]="0";//search
+		args[4]=size;//remove
+		return args;
+	}
+	//search greater than addd+removal
+	private String[] scen4(String name, String size){
+		String[] args=new String[5];
+		int s = (Integer.parseInt(size));
+		
+		args[0]=name; //name
+		args[1]=size;//size
+		args[2]=Integer.toString(s/2);//add
+		String searchNo = Integer.toString((s*(int)(Math.random() * s)));//search
+		System.out.println("Number of searches: "+ searchNo);
+		args[3]= searchNo;
+		args[4]=Integer.toString(s/2);//remove
+		return args;
 	}
 }
