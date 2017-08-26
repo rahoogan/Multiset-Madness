@@ -20,9 +20,9 @@ public class MultisetAnalyser
  	* @args Number of Searches
  	*/ 
 	public static void main(String[] args) throws IllegalArgumentException {
-		//MultisetAnalyser ma = new MultisetAnalyser();
-		//ma.multisetAnalysis();
-		analyser(args);
+		MultisetAnalyser ma = new MultisetAnalyser();
+		ma.multisetAnalysis();
+		//analyser(args);
 	}
 	
 	private static void analyser(String[] args){
