@@ -20,8 +20,9 @@ public class MultisetAnalyser
  	* @args Number of Searches
  	*/ 
 	public static void main(String[] args) throws IllegalArgumentException {
-		MultisetAnalyser ma = new MultisetAnalyser();
-		ma.multisetAnalysis();
+		//MultisetAnalyser ma = new MultisetAnalyser();
+		//ma.multisetAnalysis();
+		analyser(args);
 	}
 	
 	private static void analyser(String[] args){
@@ -91,16 +92,30 @@ public class MultisetAnalyser
 
 			// Set ratio of size of fixed set to size of multiset
 			fixedsetSize = size;
+			int complete = 0;
+			int oldComplete =0;
+			double growTime =0;
 			// Grow multiset to Size N
+			System.out.println("Growing Multiset to size...");
 			for (int i =0; i<size; ++i) {
 				int nextInt = multiRandom.nextInt(fixedsetSize);
+				long growStartTime = System.nanoTime();
 				multiset.add(nextInt);
+				long growEndTime = System.nanoTime();
+				growTime += (double)(growEndTime - growStartTime);
+
+				complete = ((int)(((double)i/(double)size)*100));
+				if(complete > 0 && complete%10 == 0 && complete != oldComplete) {
+					System.out.println(complete +"% Complete (" + ((double)(growTime))/Math.pow(10,9) + " secs)");
+				}
+				oldComplete = complete;
 			}
+			System.out.println("Starting tests...");
 
 			double limit = 3600.00*Math.pow(10,9);
 			boolean early = false;
-			int complete = 0;
-			int oldComplete =0;
+			complete = 0;
+			oldComplete =0;
 
 			// Perform Testing
 			double addTime = 0;
