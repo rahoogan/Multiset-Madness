@@ -205,7 +205,7 @@ public class MultisetAnalyser
 	}
 	
 	public void multisetAnalysis(){
-		String[] msName={"linkedlist", "sortedlinkedlist", "bst", "hash", "baltree"};
+		String[] msName={"bst", "hash", "baltree", "linkedlist", "sortedlinkedlist"};
 		String[] msSize={"10000","100000","1000000"};
 		String[] args;
 
