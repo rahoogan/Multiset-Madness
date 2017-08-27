@@ -261,9 +261,9 @@ public class MultisetAnalyser
 
 		args[0]=name; //name
 		args[1]=size;//size
-		args[2]=size;//add
+		args[2]=Integer.toString(Integer.parseInt(size)/2);//add
 		args[3]="0";//search
-		args[4]=size;//remove
+		args[4]=Integer.toString(Integer.parseInt(size)/2);//remove
 		return args;
 	}
 	//only removal
