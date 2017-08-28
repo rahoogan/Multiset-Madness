@@ -32,44 +32,45 @@ public class SortedLinkedListMultiset<T extends Comparable<T>> extends Multiset<
 				T val = currNode.getValue();
 				if(val.equals(item)) {
 					currNode.setInstances(currNode.getInstances()+1);
+					return;
 				}
 				else if(val.compareTo(item) < 0) {
 					currNode.setNext(newNode);
 					newNode.setPrev(currNode);
 					mTail = newNode;
 					mLength++;
+					return;
 				}
 				else {
 					currNode.setPrev(newNode);
 					newNode.setNext(currNode);
 					mHead = newNode;
 					mLength++;
+					return;
 				}
 			}
 			else {
-				while (currNode != null){
-					T val = currNode.getValue();
-					Node nextNode = currNode.getNext();
-					if (nextNode == null && !item.equals(val)) {
+				currNode = mHead;
+				for (int i =0; i < mLength; ++i) {
+					if(currNode.getValue().equals(item)) {
+						currNode.setInstances(currNode.getInstances()+1);
+						return;
+					}
+					else if (currNode.getNext() == null) {
 						currNode.setNext(newNode);
 						newNode.setPrev(currNode);
 						mTail = newNode;
 						mLength++;
-						break;
+						return;
 					}
-					else if (item.equals(val)) {
-						currNode.setInstances(currNode.getInstances()+1);
-						break;
-					}
-					else if (item.compareTo(val) > 0 && item.compareTo(nextNode.getValue()) < 0) {
-						currNode.setNext(newNode);
+					else if(currNode.getValue().compareTo(item) < 0 && currNode.getNext().getValue().compareTo(item) > 0) {
+						newNode.setNext(currNode.getNext());
 						newNode.setPrev(currNode);
-						newNode.setNext(nextNode);
-						nextNode.setPrev(newNode);
+						currNode.setNext(newNode);
 						mLength++;
-						break;
+						return;
 					}
-					currNode = nextNode;
+					currNode = currNode.getNext();
 				}
 			}
 		}
